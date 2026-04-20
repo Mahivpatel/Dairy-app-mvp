@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql" 
+}
+
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  password    String   
+  dairyName   String
+  pricePerBag Float    @default(20)
+  createdAt   DateTime @default(now())
+
+  customers Customer[]
+  sessions  Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  qrId        String   @unique @default(cuid())
+  name        String
+  phone       String
+  address     String
+  usualBags   Int      @default(2)
+  isActive    Boolean  @default(true)
+  isSuspended Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  userId String
+  user   User @relation(fields: [userId], references: [id])
+
+  ledgers   Ledger[]
+  purchases Purchase[]
+}
+
+model Ledger {
+  id          String   @id @default(cuid())
+  month       String   // "2026-04"
+  totalBags   Int      @default(0)
+  amountDue   Float    @default(0)
+  isPaid      Boolean  @default(false)
+  paidAt      DateTime?
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  purchases Purchase[]
+
+  @@unique([customerId, month])
+}
+
+model Purchase {
+  id         String   @id @default(cuid())
+  date       DateTime @db.Date
+  bags       Int
+
+  customerId String
+  ledgerId   String
+
+  customer   Customer @relation(fields: [customerId], references: [id])
+  ledger     Ledger   @relation(fields: [ledgerId], references: [id])
+
+  recordedAt DateTime @default(now())
+}
