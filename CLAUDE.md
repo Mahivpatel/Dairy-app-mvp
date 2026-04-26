@@ -15,10 +15,10 @@ Dairy management app replacing a physical milk card system. A single dairy owner
 | Local dev setup (Next.js, Postgres via Docker, Prisma, dependencies) | Done |
 | Prisma schema + migrations + seed | Done |
 | NextAuth credentials auth + middleware + login page | Done |
-| API routes (customers, purchases, ledgers, scan, customer-profile, cron) | Next |
-| Owner UI (dashboard, record sale, customer list, ledger view) | Pending |
-| Customer portal (public QR page, calendar, profile editor) | Pending |
-| Month rollover cron job | Pending |
+| API routes (customers, purchases, ledgers, scan, customer-profile) | Done |
+| Owner UI (dashboard, record sale, customer list, ledger view) | Done |
+| Customer portal (public QR page, calendar, profile editor) | Done |
+| Month rollover cron job | Next |
 | Production deploy (Neon + Vercel) | Pending |
 
 ## Commands
@@ -183,7 +183,7 @@ Required in `.env`:
 Added before production deploy:
 - `CRON_SECRET` — secures the month rollover cron endpoint
 
-## API Routes (building next)
+## API Routes
 
 All owner routes require a valid session. All `/api/customer-profile/*` routes are intentionally public.
 
@@ -194,11 +194,13 @@ All owner routes require a valid session. All `/api/customer-profile/*` routes a
 | PATCH | `/api/customers/[id]` | Owner | Update details or toggle suspension |
 | PATCH | `/api/customers/[id]/regenerate-qr` | Owner | Issue new qrId |
 | POST | `/api/purchases` | Owner | Record a purchase (transaction required) |
+| GET | `/api/ledgers` | Owner | List all ledgers with filters |
 | GET | `/api/ledgers/[id]` | Owner | Ledger + all purchases for that month |
 | PATCH | `/api/ledgers/[id]` | Owner | Mark as paid / unpaid |
 | GET | `/api/scan/[qrId]` | Owner | Look up customer by QR for scanner UI |
 | GET | `/api/customer-profile/[qrId]` | Public | Customer data + current ledger |
 | PATCH | `/api/customer-profile/[qrId]` | Public | Customer updates their own profile |
+| PATCH | `/api/customer-profile/[qrId]/regenerate-qr` | Public | Customer regenerates their own QR |
 | GET | `/api/cron/month-rollover` | Cron secret | Create new ledgers for all active customers |
 
 ## What NOT to Do

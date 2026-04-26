@@ -124,7 +124,7 @@ export async function POST(request: Request) {
         where: { id: ledger.id },
         data: {
           totalBags: { increment: bagsDiff },
-          amountDue: { increment: bagsDiff * pricePerBag },
+          amountDue: (ledger.totalBags + bagsDiff) * pricePerBag,
         },
       }),
     ]);
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
         where: { id: ledger.id },
         data: {
           totalBags: { increment: bags },
-          amountDue: { increment: bags * pricePerBag },
+          amountDue: (ledger.totalBags + bags) * pricePerBag,
         },
       }),
     ]);

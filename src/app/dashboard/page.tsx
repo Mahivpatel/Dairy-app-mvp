@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { currentMonth } from "@/lib/utils";
-import { ScanLine, Users, BarChart3, ShoppingBag, IndianRupee, Clock, UserCheck } from "lucide-react";
+import { ScanLine, Users, BarChart3, ShoppingBag, IndianRupee, Clock, UserCheck, Settings } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                {user.dairyName || `${user.name}'s Dairy`}
+                {`${user.name}'s Dairy`}
               </h1>
               <p className="text-gray-500 text-sm flex items-center gap-2">
                 <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -176,6 +176,19 @@ export default async function DashboardPage() {
               <div>
                 <p className="font-semibold text-gray-900">Ledgers</p>
                 <p className="text-sm text-gray-500">View monthly billing</p>
+              </div>
+            </a>
+            {/* Settings */}
+            <a
+              href="/dashboard/settings"
+              className="group flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            >
+              <div className="p-3 bg-slate-50 rounded-xl text-slate-600 group-hover:bg-slate-100 transition-colors">
+                <Settings className="w-8 h-8" />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">Settings</p>
+                <p className="text-sm text-gray-500">Configure dairy settings</p>
               </div>
             </a>
           </div>
